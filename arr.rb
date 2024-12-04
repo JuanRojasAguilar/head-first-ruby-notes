@@ -4,34 +4,33 @@ prices = [3.99, 25.00, 8.99]
 
 def total(price_list)
   amount = 0
-  index = 0
-  while index < price_list.length
-    amount += price_list[index]
-    index += 1
+  price_list.each do |price|
+    amount += price
   end
   return amount
 end
 
 def refund(price_list)
   amount = 0
-  index = 0
-  while index < price_list.length
-    amount -= price_list[index]
-    index += 1
+  price_list.each do |price|
+    amount -= price
   end
   return amount
 end
 
 def show_discounts(price_list)
-  index = 0
-  while index < price_list.length
-    discount = BigDecimal("3.0")
-    product_price = BigDecimal(price_list[index].to_s)
-    amount_off = product_price / discount
-    formated_amount = amount_off.round(2).to_s("F")
+  discount_reciprocal = get_discount_reciprocal(30)
+  price_list.each do |price|
+    product_price = BigDecimal(price.to_s)
+    calculated_price = product_price * discount_reciprocal
+    formated_amount = calculated_price.round(2).to_s("F")
     puts format("You got a discount of: $%.2f", formated_amount)
-    index += 1
   end
+end
+
+def get_discount_reciprocal(discount_percentage)
+  raise ArgumentError, "Discount should be higher than 0" if discount_percentage <= 0
+  BigDecimal("1") / BigDecimal((discount_percentage / 10).to_s)
 end
 
 puts format("The total is $%.2f", total(prices))
